@@ -1,6 +1,9 @@
 package com.nortal.platformer;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -9,21 +12,23 @@ public class Game {
 
     private final String gameFile;
     private final Integer points = 500;
-    private Platform activePlatform;
-    private int currentPoints = 0;
     List<Platform> platforms;
     List<Platform> unlockedPlatforms = new ArrayList<>();
+    private Platform activePlatform;
+    private int currentPoints = 0;
 
     public Game(String gameFile) {
         this.gameFile = gameFile;
     }
 
-    public static void main(String[] args) throws IOException {
-        Game game = new Game("C:\\dev\\WinterUniversity_2022\\WinterUniversity_2022\\java-platformer\\src\\main\\resources\\platforms.csv");
+    public static void main(String[] args) throws IOException, URISyntaxException {
+
+//      Game game = new Game("C:\\dev\\WinterUniversity_2022\\WinterUniversity_2022\\java-platformer\\src\\main\\resources\\platforms.csv");
+        Game game = new Game("platforms.csv");
         game.run();
     }
 
-    public void run() throws IOException {
+    public void run() throws IOException, URISyntaxException {
         platforms = readPlatforms();
         currentPoints = points;
 
@@ -38,8 +43,7 @@ public class Game {
                 if (isLatestPlatform()) {
                     break;
                 }
-            }
-            else {
+            } else {
                 moveToPreviousPlatform();
             }
         }
@@ -54,37 +58,33 @@ public class Game {
         if (isNextPlatfromUnlocked()) {
             return true;
         }
-        Platform nextPlatform = platforms.get(activePlatform.getIndex() + 1);
-            if (currentPoints >= nextPlatform.getCost()) {
-                return true;
-            }
-            return false;
+//        Platform nextPlatform = platforms.get(activePlatform.getIndex() + 1);
+//        currentPoints = currentPoints + nextPlatform.getCost();
+        return false;
     }
 
     private void moveToNextPlatform() {
 
         if (isNextPlatfromUnlocked()) {
+            activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints + activePlatform.getCost();
         }
         else
         {
+            activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints - activePlatform.getCost();
-
         }
-        activePlatform = platforms.get(activePlatform.getIndex() + 1);
+
         unlockedPlatforms.add(activePlatform);
         jumpTo(activePlatform);
     }
 
     private boolean isLatestPlatform() {
         int platformsize = platforms.size();
-        if(activePlatform.getIndex() + 1 >= platformsize ) {
-            return true;
-        }
-        return false;
+        return activePlatform.getIndex() + 1 >= platformsize;
     }
 
-    private boolean isNextPlatfromUnlocked () {
+    private boolean isNextPlatfromUnlocked() {
         Platform nextPlatform = platforms.get(activePlatform.getIndex() + 1);
         for (int i = 0; i < unlockedPlatforms.size(); i++) {
             if (unlockedPlatforms.get(i).getIndex() == nextPlatform.getIndex()) {
@@ -107,9 +107,12 @@ public class Game {
      *
      * @return platforms - Platforms as list
      */
-    private List<Platform> readPlatforms() throws IOException {
+    private List<Platform> readPlatforms() throws IOException, URISyntaxException {
         List<Platform> platforms = new ArrayList<>();
-        List<String> lines = Files.readAllLines(Paths.get(gameFile));
+
+        URL resource = getClass().getClassLoader().getResource(gameFile);
+        File csvFile = new File(resource.toURI());
+        List<String> lines = Files.readAllLines(csvFile.toPath());
 
         for (int i = 1; i < lines.size(); i++) {
             String[] lineparts = lines.get(i).split(", ");
