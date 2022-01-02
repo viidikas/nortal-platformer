@@ -1,17 +1,11 @@
-Can I move to next - yes or no
-If not, go one step back
-If yes, move forward, subtract points + memorize where I was.õõ
+Can I move to next level
 
+Küsi, kus praegu olen. Kas see level on ka hashmapis.
+Kui on hashmapis olemas, liigu sinna ja liida punktid.
 
+Kui see level pole hashmapis,
+küsi, palju selle platvormi avamiseks raha vaja on.
 
-Can I move to next?
-    If yes ->move to next meetod (
+Kui on piisavalt, pane level hashmapi ja lahuta raha.
 
-    kas ma olen sellel levelil olnud, kui jah, siis uus tsükkel ja punkte ei lisa +
-    muudab aktiivset platvormi
-    Kui ei ole olnud sellel levelil - lahutab punktid + tee level lahti) + uus tsykkel
-
-
-
-    If no -> Move to previous(liida leveli punktid olemasolevale skoorile, vähenda aktiivset levelit)
-
+Kui ei ole piisavalt, liigu üks level tagasi ja liida raha.

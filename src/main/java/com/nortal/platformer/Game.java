@@ -53,17 +53,19 @@ public class Game {
     }
 
     private boolean canIMoveToNextPlatform() {
-        return isNextPlatfromUnlocked();
+        Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
+        return !isNextPlatfromLocked() && currentPoints >= nextplatform.getCost();
     }
+
 
     private void moveToNextPlatform() {
 
-        if (isNextPlatfromUnlocked()) {
-            activePlatform = platforms.get(activePlatform.getIndex() + 1);
-            currentPoints = currentPoints + activePlatform.getCost();
-        } else {
+        if (isNextPlatfromLocked()) {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints - activePlatform.getCost();
+        } else {
+            activePlatform = platforms.get(activePlatform.getIndex() + 1);
+            currentPoints = currentPoints + activePlatform.getCost();
         }
 
         unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
@@ -75,7 +77,7 @@ public class Game {
         return activePlatform.getIndex() + 1 >= platformsize;
     }
 
-    private boolean isNextPlatfromUnlocked() {
+    private boolean isNextPlatfromLocked() {
         return !unlockedPlatforms.containsKey(activePlatform.getIndex() + 1);
     }
 
