@@ -65,7 +65,6 @@ public class Game {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints - activePlatform.getCost();
             unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
-            moves.add(activePlatform);
         } else {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints + activePlatform.getCost();
@@ -86,7 +85,6 @@ public class Game {
         if (activePlatform.getIndex() > 0) {
             activePlatform = platforms.get(activePlatform.getIndex() - 1);
             currentPoints = currentPoints + activePlatform.getCost();
-            moves.add(activePlatform);
         }
 
     }
