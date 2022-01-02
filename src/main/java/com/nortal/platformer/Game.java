@@ -5,19 +5,22 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Game {
 
     private final String gameFile;
     private final Integer points = 500;
     List<Platform> platforms;
-    List<Platform> unlockedPlatforms = new ArrayList<>();
+    //    List<Platform> unlockedPlatforms = new ArrayList<>();
+    HashMap<Integer, Integer> unlockedPlatforms = new HashMap<>();
     private Platform activePlatform;
     private int currentPoints = 0;
 
     public Game(String gameFile) {
+
         this.gameFile = gameFile;
     }
 
@@ -34,7 +37,7 @@ public class Game {
 
         // TODO: Implement your mighty algorithm and jump to oblivion.
         activePlatform = platforms.get(0);
-        unlockedPlatforms.add(activePlatform);
+        unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
         currentPoints = currentPoints - activePlatform.getCost();
 
         while (true) {
@@ -47,20 +50,10 @@ public class Game {
                 moveToPreviousPlatform();
             }
         }
-
-
-//        Platform nextPlatform = findNextPlatform(activePlatform);
-//        jumpTo(nextPlatform);
-
     }
 
     private boolean canIMoveToNextPlatform() {
-        if (isNextPlatfromUnlocked()) {
-            return true;
-        }
-//        Platform nextPlatform = platforms.get(activePlatform.getIndex() + 1);
-//        currentPoints = currentPoints + nextPlatform.getCost();
-        return false;
+        return isNextPlatfromUnlocked();
     }
 
     private void moveToNextPlatform() {
@@ -68,14 +61,12 @@ public class Game {
         if (isNextPlatfromUnlocked()) {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints + activePlatform.getCost();
-        }
-        else
-        {
+        } else {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints - activePlatform.getCost();
         }
 
-        unlockedPlatforms.add(activePlatform);
+        unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
         jumpTo(activePlatform);
     }
 
@@ -85,13 +76,7 @@ public class Game {
     }
 
     private boolean isNextPlatfromUnlocked() {
-        Platform nextPlatform = platforms.get(activePlatform.getIndex() + 1);
-        for (int i = 0; i < unlockedPlatforms.size(); i++) {
-            if (unlockedPlatforms.get(i).getIndex() == nextPlatform.getIndex()) {
-                return true;
-            }
-        }
-        return false;
+        return !unlockedPlatforms.containsKey(activePlatform.getIndex() + 1);
     }
 
     private void moveToPreviousPlatform() {
@@ -120,10 +105,6 @@ public class Game {
             platforms.add(platform);
         }
         return platforms;
-    }
-
-    private Platform findNextPlatform(Platform activePlatform) {
-        return Platform.builder().build();
     }
 
 
