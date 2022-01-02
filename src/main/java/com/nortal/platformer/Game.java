@@ -15,9 +15,7 @@ public class Game {
     private final String gameFile;
     private final Integer points = 500;
     List<Platform> platforms;
-    //    List<Platform> unlockedPlatforms = new ArrayList<>();
     HashMap<Integer, Integer> unlockedPlatforms = new HashMap<>();
-    ArrayList moves = new ArrayList<>();
     private Platform activePlatform;
     private int currentPoints = 0;
 
@@ -28,7 +26,6 @@ public class Game {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
 
-//      Game game = new Game("C:\\dev\\WinterUniversity_2022\\WinterUniversity_2022\\java-platformer\\src\\main\\resources\\platforms.csv");
         Game game = new Game("platforms.csv");
         game.run();
     }
@@ -46,7 +43,6 @@ public class Game {
             if (canIMoveToNextPlatform()) {
                 moveToNextPlatform();
                 if (isLatestPlatform()) {
-                    System.out.println(moves.size());
                     break;
                 }
             } else {
@@ -121,10 +117,10 @@ public class Game {
      *
      * @param platform - Platform that you are going to jump to.
      */
-    public void jumpTo(Platform platform, Integer currentPoints) {
+    public void jumpTo(Platform platform) {
 
         activePlatform = platform;
-        System.out.println(platform.getIndex() + platform.getCost());
+
 
 
     }
