@@ -1,6 +1,5 @@
 package com.nortal.platformer;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -40,11 +39,12 @@ public class Game {
         unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
 
         while (!isLatestPlatform()) {
-            Platform nextplatform = nextplaform(activePlatform);
+            Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
+            Platform previousplatform = platforms.get(activePlatform.getIndex() - 1);
             if (canIMoveToNextPlatform(nextplatform)) {
-                moveToNextPlatform();
+                moveToNextPlatform(nextplatform);
             } else {
-                moveToPreviousPlatform();
+                moveToPreviousPlatform(previousplatform);
             }
         }
     }
@@ -57,14 +57,14 @@ public class Game {
     }
 
 
-    private void moveToNextPlatform() {
+    private void moveToNextPlatform(Platform nextplatform) {
 
         if (!isNextPlatformLocked()) {
-            activePlatform = platforms.get(activePlatform.getIndex() + 1);
+            activePlatform = nextplatform;
             currentPoints = currentPoints - activePlatform.getCost();
             unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
         } else {
-            activePlatform = platforms.get(activePlatform.getIndex() + 1);
+            activePlatform = nextplatform;
             currentPoints = currentPoints + activePlatform.getCost();
         }
 
@@ -79,17 +79,21 @@ public class Game {
         return unlockedPlatforms.containsKey(activePlatform.getIndex() + 1);
     }
 
-    private void moveToPreviousPlatform() {
+    private void moveToPreviousPlatform(Platform previousplatform) {
         if (activePlatform.getIndex() > 0) {
-            activePlatform = platforms.get(activePlatform.getIndex() - 1);
+            activePlatform = previousplatform;
             currentPoints = currentPoints + activePlatform.getCost();
         }
 
     }
 
-    private Platform nextplaform(Platform activePlatform) {
-       return platforms.get(activePlatform.getIndex() + 1);
-    }
+//    private Platform nextplatform(Platform activePlatform) {
+//       return platforms.get(activePlatform.getIndex() + 1);
+//    }
+//
+//    private Platform previousPlatform(Platform activePlatform) {
+//        return platforms.get(activePlatform.getIndex() -1);
+//    }
 
     /**
      * Reads platforms from csv file and returns the as list.
