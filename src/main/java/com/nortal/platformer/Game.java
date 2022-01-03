@@ -39,23 +39,21 @@ public class Game {
         activePlatform = platforms.get(0);
         unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
 
-        while (true) {
-            if (canIMoveToNextPlatform()) {
+        while (!isLatestPlatform()) {
+            Platform nextplatform = nextplaform(activePlatform);
+            if (canIMoveToNextPlatform(nextplatform)) {
                 moveToNextPlatform();
-                if (isLatestPlatform()) {
-                    break;
-                }
             } else {
                 moveToPreviousPlatform();
             }
         }
     }
 
-    private boolean canIMoveToNextPlatform() {
-        Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
-        if (unlockedPlatforms.containsKey(nextplatform.getIndex())) {
+    private boolean canIMoveToNextPlatform(Platform platform) {
+//        Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
+        if (unlockedPlatforms.containsKey(platform.getIndex())) {
             return true;
-        } else return !unlockedPlatforms.containsKey(nextplatform.getIndex()) && nextplatform.getCost() <= currentPoints;
+        } else return !unlockedPlatforms.containsKey(platform.getIndex()) && platform.getCost() <= currentPoints;
     }
 
 
@@ -65,7 +63,6 @@ public class Game {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints - activePlatform.getCost();
             unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
-            moves.add(activePlatform);
         } else {
             activePlatform = platforms.get(activePlatform.getIndex() + 1);
             currentPoints = currentPoints + activePlatform.getCost();
@@ -86,9 +83,12 @@ public class Game {
         if (activePlatform.getIndex() > 0) {
             activePlatform = platforms.get(activePlatform.getIndex() - 1);
             currentPoints = currentPoints + activePlatform.getCost();
-            moves.add(activePlatform);
         }
 
+    }
+
+    private Platform nextplaform(Platform activePlatform) {
+       return platforms.get(activePlatform.getIndex() + 1);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Game {
 
         activePlatform = platform;
 
-
-
     }
+
+
 }
