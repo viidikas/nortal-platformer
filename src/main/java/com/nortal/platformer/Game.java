@@ -40,10 +40,11 @@ public class Game {
 
         while (!isLatestPlatform()) {
             Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
-            Platform previousplatform = platforms.get(activePlatform.getIndex() - 1);
+
             if (canIMoveToNextPlatform(nextplatform)) {
                 moveToNextPlatform(nextplatform);
             } else {
+                Platform previousplatform = platforms.get(activePlatform.getIndex() - 1);
                 moveToPreviousPlatform(previousplatform);
             }
         }
