@@ -41,7 +41,13 @@ public class Game {
         while (!isLatestPlatform()) {
             Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
 
-            if (canIMoveToNextPlatform(nextplatform)) {
+            //Which platform to move, forward or back?
+            //Based on how many points are needed to unlock next level. If you have enough points to unlock next level, move on.
+            // If you have moved back one step(unlocked level - 2 for example), then does moving
+            //forward again give enough points to unlock the locked level. If it doesnt,
+            // I will move back one more step to collect more points and then
+            //go into the cycle again.
+            if (calculator(activePlatform, currentPoints) && canIMoveToNextPlatform(nextplatform)) {
                 moveToNextPlatform(nextplatform);
             } else {
                 Platform previousplatform = platforms.get(activePlatform.getIndex() - 1);
@@ -51,7 +57,6 @@ public class Game {
     }
 
     private boolean canIMoveToNextPlatform(Platform platform) {
-//        Platform nextplatform = platforms.get(activePlatform.getIndex() + 1);
         if (unlockedPlatforms.containsKey(platform.getIndex())) {
             return true;
         } else return !unlockedPlatforms.containsKey(platform.getIndex()) && platform.getCost() <= currentPoints;
@@ -61,12 +66,10 @@ public class Game {
     private void moveToNextPlatform(Platform nextplatform) {
 
         if (!isNextPlatformLocked()) {
-            activePlatform = nextplatform;
-            currentPoints = currentPoints - activePlatform.getCost();
+            currentPoints = currentPoints - nextplatform.getCost();
             unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
         } else {
-            activePlatform = nextplatform;
-            currentPoints = currentPoints + activePlatform.getCost();
+            currentPoints = currentPoints + nextplatform.getCost();
         }
 
     }
@@ -88,13 +91,16 @@ public class Game {
 
     }
 
-//    private Platform nextplatform(Platform activePlatform) {
-//       return platforms.get(activePlatform.getIndex() + 1);
-//    }
-//
-//    private Platform previousPlatform(Platform activePlatform) {
-//        return platforms.get(activePlatform.getIndex() -1);
-//    }
+    private boolean calculator(Platform activeplatform, Integer currentPoints) {
+        int differenceToLocked = unlockedPlatforms.size() - activeplatform.getIndex();
+        int possiblePointsToGet = 0;
+        int nextLockedPlatform = unlockedPlatforms.size() + 1;
+
+        for (Integer i = 1; i < differenceToLocked; i++) {
+            possiblePointsToGet = platforms.get(activePlatform.getIndex() + i).getCost();
+        }
+        return possiblePointsToGet + currentPoints > nextLockedPlatform;
+    }
 
     /**
      * Reads platforms from csv file and returns the as list.
