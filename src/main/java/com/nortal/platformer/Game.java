@@ -33,7 +33,6 @@ public class Game {
         platforms = readPlatforms();
         currentPoints = points;
 
-
         // TODO: Implement your mighty algorithm and jump to oblivion.
         activePlatform = platforms.get(0);
         unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
@@ -49,6 +48,7 @@ public class Game {
             //go into the cycle again.
             if (calculator(activePlatform, currentPoints) && canIMoveToNextPlatform(nextplatform)) {
                 moveToNextPlatform(nextplatform);
+
             } else {
                 Platform previousplatform = platforms.get(activePlatform.getIndex() - 1);
                 moveToPreviousPlatform(previousplatform);
@@ -71,6 +71,7 @@ public class Game {
         } else {
             currentPoints = currentPoints + nextplatform.getCost();
         }
+        activePlatform = platforms.get(activePlatform.getIndex() + 1);
 
     }
 
@@ -92,14 +93,18 @@ public class Game {
     }
 
     private boolean calculator(Platform activeplatform, Integer currentPoints) {
-        int differenceToLocked = unlockedPlatforms.size() - activeplatform.getIndex();
-        int possiblePointsToGet = 0;
         int nextLockedPlatform = unlockedPlatforms.size() + 1;
+        int differenceToLocked = nextLockedPlatform - activeplatform.getIndex();
+        int possiblePointsToGet = 0;
 
-        for (Integer i = 1; i < differenceToLocked; i++) {
+        if (activeplatform.getIndex() > 0) {
+            for (int i = 1; i < differenceToLocked; i++) {
             possiblePointsToGet = platforms.get(activePlatform.getIndex() + i).getCost();
+            }
+            return possiblePointsToGet + currentPoints > nextLockedPlatform;
         }
-        return possiblePointsToGet + currentPoints > nextLockedPlatform;
+        return false;
+
     }
 
     /**
