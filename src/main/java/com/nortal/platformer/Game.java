@@ -53,13 +53,13 @@ public class Game {
             //go into the cycle again.
             //pointsCalculator(activePlatform, currentPoints)
             if (canIMoveToNextPlatform(activePlatform, nextplatform)) {
-                if (currentPoints > nextplatform.getCost()) {
+                if (currentPoints >= nextLockedPlatform.getCost()) {
                     moveToNextPlatform(nextplatform);
-                } else if (currentPoints < nextLockedPlatform.getCost()) {
+                } else if (currentPoints < pointsCalculator(activePlatform, currentPoints)) {
+                    moveToPreviousPlatform(previousplatform);
+                } else {
                     moveToPreviousPlatform(previousplatform);
                 }
-            } else {
-                moveToPreviousPlatform(previousplatform);
             }
         }
     }
@@ -67,14 +67,14 @@ public class Game {
     private boolean canIMoveToNextPlatform(Platform platform, Platform nextplatform) {
         if (unlockedPlatforms.containsKey(platform.getIndex())) {
             return true;
-        } else return !unlockedPlatforms.containsKey(platform.getIndex()) && nextplatform.getCost() <= currentPoints;
+        } return false;//else return !unlockedPlatforms.containsKey(platform.getIndex()) && nextplatform.getCost() <= currentPoints;
     }
 
 
     private void moveToNextPlatform(Platform nextplatform) {
 
         if (!isNextPlatformLocked()) {
-            unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
+            unlockedPlatforms.put(nextplatform.getIndex(), nextplatform.getCost());
             currentPoints = currentPoints - nextplatform.getCost();
         } else {
             currentPoints = currentPoints + nextplatform.getCost();
@@ -102,18 +102,17 @@ public class Game {
 
     }
         // return true, if moving forward gives you enough points to unlock locked platform
-    private boolean pointsCalculator(Platform activeplatform, Integer currentPoints) {
+    private Integer pointsCalculator(Platform activeplatform, Integer currentPoints) {
         int nextLockedPlatform = unlockedPlatforms.size() + 1;
-        int differenceToLocked = nextLockedPlatform - activeplatform.getIndex();
+        int differenceToLocked = nextLockedPlatform - activeplatform.getIndex() - 1;
         int possiblePointsToGet = 0;
 
         if (activeplatform.getIndex() >= 0) {
             for (int i = 1; i < differenceToLocked; i++) {
-            possiblePointsToGet = platforms.get(activePlatform.getIndex() + i).getCost();
+                possiblePointsToGet = platforms.get(activePlatform.getIndex() + i).getCost();
             }
-            return possiblePointsToGet + currentPoints > nextLockedPlatform;
         }
-        return false;
+        return possiblePointsToGet + currentPoints;
 
     }
 
