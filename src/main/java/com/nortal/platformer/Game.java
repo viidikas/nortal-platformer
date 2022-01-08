@@ -39,32 +39,21 @@ public class Game {
 
         // TODO: Implement your mighty algorithm and jump to oblivion.
         activePlatform = platforms.get(0);
-        unlockedPlatforms.put(activePlatform.getIndex(), activePlatform.getCost());
+        nextLockedPlatform = platforms.get(unlockedPlatforms.size() + 1);
         System.out.println(activePlatform.getIndex() + " " + currentPoints);
-
         while (!isLatestPlatform()) {
             if (activePlatform.getIndex() != platforms.size()) {
                 nextPlatform = platforms.get(activePlatform.getIndex() + 1);
-            }
-            if (unlockedPlatforms.size() != platforms.size() - 1) {
-                nextLockedPlatform = platforms.get(unlockedPlatforms.size() + 1);
             }
             if (activePlatform.getIndex() != 0) {
                 previousPlatform = platforms.get(activePlatform.getIndex() - 1);
             }
 
-            //Which platform to move, forward or back?
-            //Based on how many points are needed to unlock next level. If you have enough points to unlock next level, move on.
-            // If you have moved back one step(unlocked level - 2 for example), then does moving
-            //forward again give enough points to unlock the locked level. If it doesnt,
-            // I will move back one more step to collect more points and then
-            //go into the cycle again.
-            //pointsCalculator(activePlatform, currentPoints)
             if (isNextPlatformLocked()) {
                 if (currentPoints >= nextLockedPlatform.getCost()) {
                     moveToNextPlatform(nextPlatform);
                 } else if (activePlatform.getIndex() == 0) {
-                    moveToNextPlatform(activePlatform);
+                    moveToNextPlatform(nextPlatform);
                 } else {
                     moveToPreviousPlatform(previousPlatform);
                 }
@@ -90,6 +79,9 @@ public class Game {
         if (isNextPlatformLocked()) {
             unlockedPlatforms.put(nextplatform.getIndex(), nextplatform.getCost());
             currentPoints = currentPoints - nextplatform.getCost();
+            if (unlockedPlatforms.size() != platforms.size() - 1) {
+                nextLockedPlatform = platforms.get(unlockedPlatforms.size() + 1);
+            }
         } else {
             currentPoints = currentPoints + nextplatform.getCost();
         }
@@ -157,11 +149,6 @@ public class Game {
     public void jumpTo(Platform platform) {
 
         activePlatform = platform;
-        System.out.println(
-                activePlatform.getIndex() +
-                        " " + currentPoints +
-                        " " + unlockedPlatforms.size() +
-                        " " + nextLockedPlatform.getCost());
 
     }
 
