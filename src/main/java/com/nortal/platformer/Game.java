@@ -40,7 +40,7 @@ public class Game {
         // TODO: Implement your mighty algorithm and jump to oblivion.
         activePlatform = platforms.get(0);
         nextLockedPlatform = platforms.get(unlockedPlatforms.size() + 1);
-        System.out.println(activePlatform.getIndex() + " " + currentPoints);
+
         while (!isLatestPlatform()) {
             if (activePlatform.getIndex() != platforms.size()) {
                 nextPlatform = platforms.get(activePlatform.getIndex() + 1);
